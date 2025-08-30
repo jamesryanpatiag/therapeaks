@@ -20,6 +20,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Saade\FilamentFullCalendar\FilamentFullCalendarPlugin;
 use Filament\Navigation\MenuItem;
 use Filament\Support\Enums\MaxWidth;
+use Joaopaulolndev\FilamentEditProfile\FilamentEditProfilePlugin;
 use App\Filament\Pages\Profile;
 
 class AdminPanelProvider extends PanelProvider
@@ -66,7 +67,15 @@ class AdminPanelProvider extends PanelProvider
                 ]),
                 FilamentFullCalendarPlugin::make()
                         ->selectable()
-                        ->editable()
+                        ->editable(),
+                FilamentEditProfilePlugin::make()
+                    ->shouldShowAvatarForm()
+                    ->setNavigationLabel('My Profile')
+                    ->setNavigationGroup('Group Profile')
+                    ->setIcon('heroicon-o-user')
+                    ->setTitle('My Profile')
+                    ->shouldShowBrowserSessionsForm(false)           
+
             ])
             ->brandLogo(asset('images/therapeaks.png'))
             ->brandLogoHeight('3.5rem')
