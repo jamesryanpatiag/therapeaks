@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "arielmejiadev/filament-printable": "^3.0",
+        "bezhansalleh/filament-shield": "^3.3",
         "ercogx/filament-openai-assistant": "^1.1",
         "filament/filament": "^3.3",
         "joaopaulolndev/filament-edit-profile": "^1.0",

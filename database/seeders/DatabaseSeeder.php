@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\ModelHasRole;
 use Illuminate\Database\Seeder;
+use DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,12 +14,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;'); // Disable checks
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'admin@gmail.com',
-            'password' => bcrypt('!Password@123'), // Ensure to hash the password
+        User::factory()->create();
+
+        ModelHasRole::factory()->create([
+            'role_id' => 1,
+            'model_type' => 'App\Models\User',
+            'model_id' => 1,
         ]);
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;'); // Re-enable checks
+
     }
 }

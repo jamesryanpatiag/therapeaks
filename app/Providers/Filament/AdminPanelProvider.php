@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use Filament\Http\Middleware\Authenticate;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -32,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->brandName('Your Custom Brand Name')
             ->colors([
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
@@ -61,6 +63,7 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->plugins([
+                FilamentShieldPlugin::make(),
                 \Ercogx\FilamentOpenaiAssistant\OpenaiAssistantPlugin::make()
                 ->setRegistrablePages([
                     \App\Filament\Pages\ChatPage::class
@@ -69,13 +72,14 @@ class AdminPanelProvider extends PanelProvider
                         ->selectable()
                         ->editable(),
                 FilamentEditProfilePlugin::make()
+                    ->slug('my-profile')
                     ->shouldShowAvatarForm()
                     ->setNavigationLabel('My Profile')
                     ->setNavigationGroup('Group Profile')
                     ->setIcon('heroicon-o-user')
                     ->setTitle('My Profile')
-                    ->shouldShowBrowserSessionsForm(false)           
-
+                    ->shouldShowBrowserSessionsForm(false)     
+                    ->shouldShowEmailForm()      
             ])
             ->brandLogo(asset('images/therapeaks.png'))
             ->brandLogoHeight('3.5rem')
