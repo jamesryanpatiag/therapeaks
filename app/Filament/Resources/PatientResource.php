@@ -19,6 +19,7 @@ use ArielMejiaDev\FilamentPrintable\Actions\PrintBulkAction;
 use Filament\Forms\Components\Tabs;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Tabs\Tab;
+use Filament\Forms\Components\FileUpload;
 use Log;
 
 class PatientResource extends Resource
@@ -37,6 +38,11 @@ class PatientResource extends Resource
                     Forms\Components\Tabs\Tab::make('Patient Information')
                     ->icon('heroicon-o-user')
                     ->schema([
+                        FileUpload::make('avatar_url')
+                            ->label('Avatar')
+                            ->directory('avatar')
+                            ->avatar()
+                            ->columnSpanFull(),
                         Forms\Components\TextInput::make('name')
                             ->required()
                             ->maxLength(255),
@@ -59,6 +65,11 @@ class PatientResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('avatar_url')
+                    ->label('Avatar')
+                    ->circular()
+                    ->checkFileExistence(false)
+                    ->extraImgAttributes(['loading' => 'lazy']),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')

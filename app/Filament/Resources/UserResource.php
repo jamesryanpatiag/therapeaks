@@ -3,9 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use Filament\Infolists\Components\ImageEntry;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use ArielMejiaDev\FilamentPrintable\Actions\PrintBulkAction;
+use Filament\Support\Enums\Alignment;
+use Rawilk\FilamentPasswordInput\Password; 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,6 +16,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Section;
+use Illuminate\Support\Facades\Hash;
+use Filament\Pages\Page;
+use Filament\Forms\Components\FileUpload;
 
 class UserResource extends Resource
 {
@@ -26,26 +33,35 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('specialization')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('license_number')
-                    ->maxLength(255),
-                Forms\Components\Select::make('roles')
-                    ->relationship('roles', 'name')
-                    ->preload()
-                    ->required(),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
+                Forms\Components\Section::make('Status')
+                    ->schema([
+                        FileUpload::make('avatar_url')
+                            ->label('Avatar')
+                            ->directory('avatar')
+                            ->avatar()
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('name')
+                            ->rule(['required'])
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->rule(['required'])
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('specialization')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('license_number')
+                            ->maxLength(255),
+                        Forms\Components\Select::make('roles')
+                            ->relationship('roles', 'name')
+                            ->preload()
+                            ->rule(['required']),
+                        Forms\Components\TextInput::make('password')
+                            ->revealable(true)
+                            ->password()
+                            ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                            ->dehydrated(fn ($state) => filled($state))
+                            ->required(fn (string $context): bool => $context === 'create'),
+                ])->columns(2),
             ]);
     }
 
@@ -53,13 +69,15 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\ImageColumn::make('avatar_url')
+                    ->label('Avatar')
+                    ->circular()
+                    ->checkFileExistence(false)
+                    ->extraImgAttributes(['loading' => 'lazy']),
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('specialization')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('license_number')
@@ -74,8 +92,6 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('avatar_url')
-                    ->searchable(),
             ])
             ->filters([
                 //

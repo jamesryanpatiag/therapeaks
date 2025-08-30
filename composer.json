@@ -14,6 +14,7 @@
         "joaopaulolndev/filament-edit-profile": "^1.0",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "phpsa/filament-password-reveal": "^2.1",
         "saade/filament-fullcalendar": "^3.0"
     },
     "require-dev": {
