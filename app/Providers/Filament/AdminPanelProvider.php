@@ -82,6 +82,7 @@ class AdminPanelProvider extends PanelProvider
                     ->shouldShowEmailForm()      
             ])
             ->brandLogo(asset('images/therapeaks.png'))
+            ->favicon(asset('images/therapeaks.png'))
             ->brandLogoHeight('3.5rem')
             ->authMiddleware([
                 Authenticate::class,
