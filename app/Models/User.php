@@ -10,6 +10,7 @@ use Filament\Models\Contracts\HasAvatar;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Traits\HasRoles;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
 class User extends Authenticatable implements HasAvatar, FilamentUser
 {
